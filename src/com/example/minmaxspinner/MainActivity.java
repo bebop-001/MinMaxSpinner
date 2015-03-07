@@ -5,8 +5,11 @@ import java.util.List;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 
-public class MainActivity extends Activity {
+import com.example.minmaxspinner.MinMaxSpinner.OnMinMaxSpinnerListener;
+
+public class MainActivity extends Activity implements OnMinMaxSpinnerListener {
 	private static final String logTag = "MainActivity";
 	private static List<String> strokecountList;
 	private static final int MAX_STROKECOUNT = 24;
@@ -22,5 +25,12 @@ public class MainActivity extends Activity {
 		}
 		minMaxSpinner = new MinMaxSpinner(this
 			, R.id.min_strokecount, R.id.max_strokecount, strokecountList);
+		minMaxSpinner.setOnSelectListener(this);
+	}
+
+	@Override
+	public void onMinMaxSelect(int id) {
+		Log.i(logTag, "onMinMaxSelect: min = " + minMaxSpinner.getMin()
+				+ ", max = " + minMaxSpinner.getMax());
 	}
 }

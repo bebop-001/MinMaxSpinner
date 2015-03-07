@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -14,20 +12,42 @@ import android.widget.Spinner;
 
 public class MinMaxSpinner extends Spinner implements OnItemSelectedListener {
 	private static final String logTag = "MinMaxSpinner";
+    private static int idBase = 100;
+    public int spinnerId = idBase++;
 	private Spinner minSpinner, maxSpinner;
 	List<String> list;
 	MinMaxAdapter minAdapter, maxAdapter;
 	private int minResId, maxResId;
-	private Activity activity;
+	private String minString, maxString;
+	
+	
+    // Use a Runnable and post this rather than calling
+    // performClick directly. This lets other visual state
+    // of the view update before click actions start.
+    public OnMinMaxSpinnerListener onMinMaxSpinnerListener;
+    public interface OnMinMaxSpinnerListener {
+        public void onMinMaxSelect(int id);
+    }
+    public void setOnSelectListener(OnMinMaxSpinnerListener l) {
+        onMinMaxSpinnerListener = l;
+    }
+    private PerformSelect performSelect = new PerformSelect();
+    private final class PerformSelect implements Runnable {
+        public void run() {
+        	if (null != onMinMaxSpinnerListener)
+        		onMinMaxSpinnerListener.onMinMaxSelect(spinnerId);
+        }
+    }
 
 	public MinMaxSpinner(Activity activity, int minResId, int maxResId, List<String> list) {
 		super(activity);
-		boolean showSpinnerHint = true;
-		this.activity = activity; this.minResId = minResId; this.maxResId = maxResId;
-		MinMaxAdapter adapter;
+		this.minResId = minResId; this.maxResId = maxResId;
+		maxString = new String(activity.getResources().getString(R.string.max_spinner_string));
+		minString = new String(activity.getResources().getString(R.string.min_spinner_string));
+
 		List<String> l;
 		l = new ArrayList<String>(list);
-		l.add(activity.getResources().getString(R.string.min_spinner_string));
+		l.add(minString);
 		minSpinner = (Spinner)activity.findViewById(minResId);
 		minAdapter = new MinMaxAdapter(activity
 				, android.R.layout.simple_spinner_item, l);
@@ -38,7 +58,7 @@ public class MinMaxSpinner extends Spinner implements OnItemSelectedListener {
 		minSpinner.setSelection(minSpinner.getCount());
 		
 		l = new ArrayList<String>(list);
-		l.add(activity.getResources().getString(R.string.max_spinner_string));
+		l.add(maxString);
 		maxSpinner = (Spinner)activity.findViewById(maxResId);
 		maxAdapter = new MinMaxAdapter(activity
 				, android.R.layout.simple_spinner_item, l);
@@ -63,13 +83,11 @@ public class MinMaxSpinner extends Spinner implements OnItemSelectedListener {
 		}
     }
 	public String getMin() {
-		int selected = (int)minSpinner.getSelectedItemId();
-		String rv = (String)minSpinner.getItemAtPosition(selected);
+		String rv = (String)minSpinner.getSelectedItem();
 		return rv;
 	}
 	public String getMax() {
-		int selected = (int)maxSpinner.getSelectedItemId();
-		String rv = (String)maxSpinner.getItemAtPosition(selected);
+		String rv = (String)maxSpinner.getSelectedItem();
 		return rv;
 	}
 	@Override
@@ -78,28 +96,34 @@ public class MinMaxSpinner extends Spinner implements OnItemSelectedListener {
 		// ignore the hint position.
 		if (position < parent.getCount()) {
 			int spinnerId = parent.getId();
-			if (spinnerId == minResId) {
-				// If user sets min value, catch the current max value,
-				// truncate the max values to be valid for the new min,
-				// then try to set the max value back to what it was
-				// before.  the change.
-				String currentMax = (String)maxSpinner.getSelectedItem();
-				int sel = (int) maxSpinner.getSelectedItemPosition();
-				List<String> l = new ArrayList<String>();
-				List<String> maxList = maxAdapter.getAdapterList();
-				for(int i = minSpinner.getSelectedItemPosition(); i < maxList.size(); i++) {
-					l.add(maxList.get(i));
+			if (spinnerId == minResId || spinnerId == maxResId) {
+				if (spinnerId == minResId) {
+					// If user sets min value, catch the current max value,
+					// truncate the max values to be valid for the new min,
+					// then try to set the max value back to what it was
+					// before.  the change.
+					String currentMax = (String)maxSpinner.getSelectedItem();
+					List<String> l = new ArrayList<String>();
+					List<String> maxList = maxAdapter.getAdapterList();
+					for(int i = minSpinner.getSelectedItemPosition(); i < maxList.size(); i++) {
+						l.add(maxList.get(i));
+					}
+					maxAdapter.clear();
+					maxAdapter.addAll(l);
+					maxAdapter.notifyDataSetChanged();
+					maxSpinner.setSelection(maxAdapter.getPosition(currentMax));
 				}
-				maxAdapter.clear();
-				maxAdapter.addAll(l);
-				maxAdapter.notifyDataSetChanged();
-				maxSpinner.setSelection(maxAdapter.getPosition(currentMax));
+				else {
+					// if min hasn't been selected, set it to min value.
+					String val = (String)minSpinner.getSelectedItem();
+					if (val.equals(minString))
+						minSpinner.setSelection(0);
+				}
+				// call any onSelect listeners.
+				post(performSelect);
 			}
 		}
 	}
 	@Override
-	public void onNothingSelected(AdapterView<?> parent) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onNothingSelected(AdapterView<?> parent) {}
 }
