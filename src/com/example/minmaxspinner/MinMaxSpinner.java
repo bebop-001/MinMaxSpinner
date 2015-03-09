@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Context;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -39,17 +40,18 @@ public class MinMaxSpinner extends Spinner implements OnItemSelectedListener {
         }
     }
 
-	public MinMaxSpinner(Activity activity, int minResId, int maxResId, List<String> list) {
-		super(activity);
+	public MinMaxSpinner(View contentView, int minResId, int maxResId, List<String> list) {
+		super(contentView.getContext());
+		Context context = contentView.getContext();
 		this.minResId = minResId; this.maxResId = maxResId;
-		maxString = new String(activity.getResources().getString(R.string.max_spinner_string));
-		minString = new String(activity.getResources().getString(R.string.min_spinner_string));
+		maxString = new String(context.getResources().getString(R.string.max_spinner_string));
+		minString = new String(context.getResources().getString(R.string.min_spinner_string));
 
 		List<String> l;
 		l = new ArrayList<String>(list);
 		l.add(minString);
-		minSpinner = (Spinner)activity.findViewById(minResId);
-		minAdapter = new MinMaxAdapter(activity
+		minSpinner = (Spinner)contentView.findViewById(minResId);
+		minAdapter = new MinMaxAdapter(context
 				, android.R.layout.simple_spinner_item, l);
 		minAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		minSpinner.setAdapter(minAdapter);
@@ -59,8 +61,8 @@ public class MinMaxSpinner extends Spinner implements OnItemSelectedListener {
 		
 		l = new ArrayList<String>(list);
 		l.add(maxString);
-		maxSpinner = (Spinner)activity.findViewById(maxResId);
-		maxAdapter = new MinMaxAdapter(activity
+		maxSpinner = (Spinner)contentView.findViewById(maxResId);
+		maxAdapter = new MinMaxAdapter(context
 				, android.R.layout.simple_spinner_item, l);
 		maxAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		maxSpinner.setAdapter(maxAdapter);
@@ -70,8 +72,8 @@ public class MinMaxSpinner extends Spinner implements OnItemSelectedListener {
 	}
     private class MinMaxAdapter extends ArrayAdapter<String> {
     	private List<String> list;
-    	private MinMaxAdapter(Activity activity, int resId, List<String> list) {
-    		super(activity, resId, list);
+    	private MinMaxAdapter(Context context, int resId, List<String> list) {
+    		super(context, resId, list);
     		this.list = new ArrayList<String>(list);
     	}
     	private List<String>getAdapterList() { return list; }

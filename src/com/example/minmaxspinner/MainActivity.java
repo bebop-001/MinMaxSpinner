@@ -6,6 +6,7 @@ import java.util.List;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.example.minmaxspinner.MinMaxSpinner.OnMinMaxSpinnerListener;
 
@@ -19,11 +20,12 @@ public class MainActivity extends Activity implements OnMinMaxSpinnerListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		View minMaxLayout = findViewById(R.id.min_max_layout);
 		strokecountList = new ArrayList<String>();
 		for(int i = 1; i < MAX_STROKECOUNT; i++) {
 			strokecountList.add(String.valueOf(i));
 		}
-		minMaxSpinner = new MinMaxSpinner(this
+		minMaxSpinner = new MinMaxSpinner(minMaxLayout
 			, R.id.min_strokecount, R.id.max_strokecount, strokecountList);
 		minMaxSpinner.setOnSelectListener(this);
 	}
