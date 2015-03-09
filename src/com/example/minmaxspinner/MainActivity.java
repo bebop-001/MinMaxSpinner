@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -28,6 +30,13 @@ public class MainActivity extends Activity implements OnMinMaxSpinnerListener {
 		minMaxSpinner = new MinMaxSpinner(minMaxLayout
 			, R.id.min_strokecount, R.id.max_strokecount, strokecountList);
 		minMaxSpinner.setOnSelectListener(this);
+		
+		Fragment minMaxFrag = new MinMaxSpinnerFrag();
+		FragmentTransaction transaction = getFragmentManager()
+			.beginTransaction();
+		transaction.replace(R.id.frag_placeholder, minMaxFrag)
+			.commit();
+
 	}
 
 	@Override
