@@ -56,18 +56,22 @@ public class MinMaxSpinner extends Spinner implements OnItemSelectedListener {
 		maxList.add(maxHint);
 		
 		minAdapter = new MinMaxAdapter(context
-				, android.R.layout.simple_spinner_item, minList, minHint);
+				, android.R.layout.simple_spinner_item
+				, new ArrayList<String>(minList), minHint);
 
 		maxAdapter = new MinMaxAdapter(context
-				, android.R.layout.simple_spinner_item, maxList, maxHint);
+				, android.R.layout.simple_spinner_item
+				, new ArrayList<String>(maxList), maxHint);
 
 	}
 	public void update(View contentView) {
 		Context context = contentView.getContext();
 		Log.i(logTag, minHint + ":" + maxHint + ":update");
 		
-		minAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		maxAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		minAdapter.setDropDownViewResource(
+			android.R.layout.simple_spinner_dropdown_item);
+		maxAdapter.setDropDownViewResource(
+			android.R.layout.simple_spinner_dropdown_item);
 
 		minSpinner = (Spinner)contentView.findViewById(minResId);
 		minSpinner.setAdapter(minAdapter);
