@@ -30,7 +30,7 @@ public class MainActivity extends Activity implements OnMinMaxSpinnerListener {
 		minMaxSpinner = new MinMaxSpinner(minMaxLayout
 			, R.id.min_strokecount, R.id.max_strokecount, strokecountList);
 		minMaxSpinner.setOnSelectListener(this);
-		
+
 		Fragment minMaxFrag = new MinMaxSpinnerFrag();
 		FragmentTransaction transaction = getFragmentManager()
 			.beginTransaction();
