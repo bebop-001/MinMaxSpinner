@@ -3,8 +3,8 @@ package com.example.minmaxspinner;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -45,47 +45,62 @@ public class MinMaxSpinner extends Spinner implements OnItemSelectedListener {
 		super(contentView.getContext());
 		Context context = contentView.getContext();
 		this.minResId = minResId; this.maxResId = maxResId;
-		maxHint = new String(context.getResources().getString(R.string.max_spinner_string));
-		minHint = new String(context.getResources().getString(R.string.min_spinner_string));
 		spinnerId = idBase++;
 
-		if (null == minList) {
-			minList = new ArrayList<String>(list);
-			minList.add(minHint);
-			maxList = new ArrayList<String>(list);
-			maxList.add(maxHint);
-		}
+		maxHint = new String(context.getResources().getString(R.string.max_spinner_string));
+		minHint = new String(context.getResources().getString(R.string.min_spinner_string));
 
+		minList = new ArrayList<String>(list);
+		minList.add(minHint);
+		maxList = new ArrayList<String>(list);
+		maxList.add(maxHint);
+
+	}
+	public void update(View contentView) {
+		Context context = contentView.getContext();
+		Log.i(logTag, minHint + ":" + maxHint + ":update");
 		minSpinner = (Spinner)contentView.findViewById(minResId);
 		minAdapter = new MinMaxAdapter(context
-				, android.R.layout.simple_spinner_item, minList);
+				, android.R.layout.simple_spinner_item, minList, minHint);
 		minAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		minSpinner.setAdapter(minAdapter);
 		
-		minSpinner.setOnItemSelectedListener(this);
-		minSpinner.setSelection(minSpinner.getCount());
-		
 		maxSpinner = (Spinner)contentView.findViewById(maxResId);
 		maxAdapter = new MinMaxAdapter(context
-				, android.R.layout.simple_spinner_item, maxList);
+				, android.R.layout.simple_spinner_item, maxList, maxHint);
 		maxAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		maxSpinner.setAdapter(maxAdapter);
+		
+		minSpinner.setOnItemSelectedListener(this);
+		minSpinner.setSelection(minSpinner.getCount());
 		
 		maxSpinner.setOnItemSelectedListener(this);
 		maxSpinner.setSelection(maxSpinner.getCount());
 	}
     private class MinMaxAdapter extends ArrayAdapter<String> {
-    	private List<String> list;
-    	private MinMaxAdapter(Context context, int resId, List<String> list) {
+    	private String currentItem = "";
+    	private String name;
+    	private List<String> l;
+    	private MinMaxAdapter(Context context, int resId, List<String> list, String name) {
     		super(context, resId, list);
-    		this.list = new ArrayList<String>(list);
+    		this.name = name;
+    		l = list;
+    		Log.i(logTag, "new instance:" + name + ", \"" + currentItem + "\"");
     	}
-    	private List<String>getAdapterList() { return list; }
 		@Override
 		public int getCount() {
 			// item at getCount is the hint.  Don't show...
-			int rv = super.getCount() - 1;
-			return rv;
+			int count = super.getCount() - 1;
+			Log.i(logTag, name + ":getCount:" + count);
+			return count;
+		}
+		@Override
+		public String getItem(int position) {
+			String item = super.getItem(position);
+			Log.i(logTag, name + ":getItem:" + position + ":"
+				+ currentItem + "==>" + item + ":" + l.size());
+			currentItem = item;
+			return super.getItem(position);
 		}
     }
 	public String getMin() {
@@ -110,7 +125,6 @@ public class MinMaxSpinner extends Spinner implements OnItemSelectedListener {
 					// before.  the change.
 					String currentMax = (String)maxSpinner.getSelectedItem();
 					List<String> l = new ArrayList<String>();
-					List<String> maxList = maxAdapter.getAdapterList();
 					for(int i = minSpinner.getSelectedItemPosition(); i < maxList.size(); i++) {
 						l.add(maxList.get(i));
 					}
