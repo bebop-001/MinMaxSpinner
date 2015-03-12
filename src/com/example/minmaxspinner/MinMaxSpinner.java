@@ -59,19 +59,17 @@ public class MinMaxSpinner extends Spinner {
         minAdapter = new MinMaxAdapter(context
                 , android.R.layout.simple_spinner_item
                 , new ArrayList<String>(minList), minHint);
-        minAdapter.currentIndex = minList.size() - 1;
+        minAdapter.currentIndex = 0;
 
         maxAdapter = new MinMaxAdapter(context
                 , android.R.layout.simple_spinner_item
                 , new ArrayList<String>(maxList), maxHint);
-        maxAdapter.currentIndex = maxList.size() - 1;
-
+        maxAdapter.currentIndex = maxList.size() - 2;
     }
     public void update(View contentView) {
         Log.i(logTag, minHint + ":" + maxHint + ":update "
                 + "min current=" + minAdapter.currentIndex
                 + ", max current = " + maxAdapter.currentIndex);
-
         minAdapter.setDropDownViewResource(
             android.R.layout.simple_spinner_dropdown_item);
         maxAdapter.setDropDownViewResource(
@@ -84,10 +82,10 @@ public class MinMaxSpinner extends Spinner {
         maxSpinner.setAdapter(maxAdapter);
 
         minSpinner.setOnItemSelectedListener(onItemSelectedListener());
-        minSpinner.setSelection(minAdapter.currentIndex);
-
         maxSpinner.setOnItemSelectedListener(onItemSelectedListener());
+
         maxSpinner.setSelection(maxAdapter.currentIndex);
+        minSpinner.setSelection(minAdapter.currentIndex);
     }
     private class MinMaxAdapter extends ArrayAdapter<String> {
         private int currentIndex = -1;
