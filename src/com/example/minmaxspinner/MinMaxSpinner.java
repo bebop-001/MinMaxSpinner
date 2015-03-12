@@ -125,9 +125,9 @@ public class MinMaxSpinner extends Spinner {
                         // the new min, then try to set the max value back
                         // to what it was before.  the change.
                         String currentMin
-                        = (String)minSpinner.getSelectedItem();
+                        	= (String)minSpinner.getSelectedItem();
                         String currentMax
-                        = (String)maxSpinner.getSelectedItem();
+                        	= (String)maxSpinner.getSelectedItem();
                         List<String> l = new ArrayList<String>();
                         for(int i = minSpinner.getSelectedItemPosition();
                                     i < inList.size(); i++) {
