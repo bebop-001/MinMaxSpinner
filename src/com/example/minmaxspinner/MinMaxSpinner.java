@@ -36,7 +36,7 @@ public class MinMaxSpinner extends Spinner {
     private Spinner minSpinner, maxSpinner;
     private MinMaxAdapter minAdapter, maxAdapter;
     private int minResId, maxResId;
-    private ArrayList<String> minList, maxList;
+    private ArrayList<String> inList;
 
     public MinMaxSpinner(View contentView
             , int minResId, int maxResId, List<String> list) {
@@ -45,18 +45,17 @@ public class MinMaxSpinner extends Spinner {
         this.minResId = minResId; this.maxResId = maxResId;
         spinnerId = idBase++;
 
-        minList = new ArrayList<String>(list);
-        maxList = new ArrayList<String>(list);
+        inList = new ArrayList<String>(list);
 
         minAdapter = new MinMaxAdapter(context
                 , android.R.layout.simple_spinner_item
-                , new ArrayList<String>(minList));
+                , new ArrayList<String>(inList));
         minAdapter.currentIndex = 0;
 
         maxAdapter = new MinMaxAdapter(context
                 , android.R.layout.simple_spinner_item
-                , new ArrayList<String>(maxList));
-        maxAdapter.currentIndex = maxList.size() - 1;
+                , new ArrayList<String>(inList));
+        maxAdapter.currentIndex = inList.size() - 1;
     }
     public void update(View contentView) {
         Log.i(logTag, "update "
@@ -90,7 +89,6 @@ public class MinMaxSpinner extends Spinner {
         }
         @Override
         public int getCount() {
-            // item at getCount is the hint.  Don't show...
             int count = super.getCount();
             Log.i(logTag, "getCount:" + count
                 + ", size=" + list.size() + ", spinnerId=" + spinnerId);
@@ -119,32 +117,34 @@ public class MinMaxSpinner extends Spinner {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                     int position, long id) {
-                // ignore the hint position.
-                if (position < parent.getCount()) {
-                    int spinnerId = parent.getId();
-                    if (spinnerId == minResId || spinnerId == maxResId) {
-                        if (spinnerId == minResId) {
-                            // If user sets min value, catch the current max
-                            // value, truncate the max values to be valid for
-                            // the new min, then try to set the max value back
-                            // to what it was before.  the change.
-                            String currentMax
-                                = (String)maxSpinner.getSelectedItem();
-                            List<String> l = new ArrayList<String>();
-                            for(int i = minSpinner.getSelectedItemPosition();
-                                        i < maxList.size(); i++) {
-                                l.add(maxList.get(i));
-                            }
-                            maxAdapter.clear();
-                            maxAdapter.addAll(l);
-                            maxAdapter.notifyDataSetChanged();
-                            maxSpinner
-                                .setSelection(
-                                    maxAdapter.getPosition(currentMax));
+                int spinnerId = parent.getId();
+                if (spinnerId == minResId || spinnerId == maxResId) {
+                    if (spinnerId == minResId) {
+                        // If user sets min value, catch the current max
+                        // value, truncate the max values to be valid for
+                        // the new min, then try to set the max value back
+                        // to what it was before.  the change.
+                        String currentMin
+                        = (String)minSpinner.getSelectedItem();
+                        String currentMax
+                        = (String)maxSpinner.getSelectedItem();
+                        List<String> l = new ArrayList<String>();
+                        for(int i = minSpinner.getSelectedItemPosition();
+                                    i < inList.size(); i++) {
+                            l.add(inList.get(i));
                         }
-                        // call any onSelect listeners.
-                        parent.post(performSelect);
+                        maxAdapter.clear();
+                        maxAdapter.addAll(l);
+                        maxAdapter.notifyDataSetChanged();
+                        if (l.contains(currentMax))
+	                        maxSpinner.setSelection(
+	                                maxAdapter.getPosition(currentMax));
+                        else
+                        	maxSpinner.setSelection(
+                        			maxAdapter.getPosition(currentMin));
                     }
+                    // call any onSelect listeners.
+                    parent.post(performSelect);
                 }
             }
             @Override
