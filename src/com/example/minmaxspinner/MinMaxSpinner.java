@@ -36,7 +36,6 @@ public class MinMaxSpinner extends Spinner {
     private Spinner minSpinner, maxSpinner;
     private MinMaxAdapter minAdapter, maxAdapter;
     private int minResId, maxResId;
-    private String minHint, maxHint;
     private ArrayList<String> minList, maxList;
 
     public MinMaxSpinner(View contentView
@@ -46,28 +45,21 @@ public class MinMaxSpinner extends Spinner {
         this.minResId = minResId; this.maxResId = maxResId;
         spinnerId = idBase++;
 
-        maxHint = new String(context.getResources()
-            .getString(R.string.max_spinner_string));
-        minHint = new String(context.getResources()
-            .getString(R.string.min_spinner_string));
-
         minList = new ArrayList<String>(list);
-        minList.add(minHint);
         maxList = new ArrayList<String>(list);
-        maxList.add(maxHint);
 
         minAdapter = new MinMaxAdapter(context
                 , android.R.layout.simple_spinner_item
-                , new ArrayList<String>(minList), minHint);
+                , new ArrayList<String>(minList));
         minAdapter.currentIndex = 0;
 
         maxAdapter = new MinMaxAdapter(context
                 , android.R.layout.simple_spinner_item
-                , new ArrayList<String>(maxList), maxHint);
-        maxAdapter.currentIndex = maxList.size() - 2;
+                , new ArrayList<String>(maxList));
+        maxAdapter.currentIndex = maxList.size() - 1;
     }
     public void update(View contentView) {
-        Log.i(logTag, minHint + ":" + maxHint + ":update "
+        Log.i(logTag, "update "
                 + "min current=" + minAdapter.currentIndex
                 + ", max current = " + maxAdapter.currentIndex);
         minAdapter.setDropDownViewResource(
@@ -89,28 +81,25 @@ public class MinMaxSpinner extends Spinner {
     }
     private class MinMaxAdapter extends ArrayAdapter<String> {
         private int currentIndex = -1;
-        private String name;
         private List<String> list;
         private MinMaxAdapter(Context context,
-                int resId, List<String> list, String name) {
+                int resId, List<String> list) {
             super(context, resId, list);
-            this.name = name;
             this.list = list;
-            Log.i(logTag, "new instance:" + name + "\""
-                + ", spinnerId=" + spinnerId);
+            Log.i(logTag, "new instance:spinnerId=" + spinnerId);
         }
         @Override
         public int getCount() {
             // item at getCount is the hint.  Don't show...
-            int count = super.getCount() - 1;
-            Log.i(logTag, name + ":getCount:" + count
+            int count = super.getCount();
+            Log.i(logTag, "getCount:" + count
                 + ", size=" + list.size() + ", spinnerId=" + spinnerId);
             return count;
         }
         @Override
         public String getItem(int position) {
             currentIndex = position;
-            Log.i(logTag, name + ":getItem:" + position + ":"
+            Log.i(logTag, "getItem:" + position + ":"
                 + currentIndex + "==>" + position
                 + ":" + currentIndex);
             currentIndex = position;
@@ -152,12 +141,6 @@ public class MinMaxSpinner extends Spinner {
                             maxSpinner
                                 .setSelection(
                                     maxAdapter.getPosition(currentMax));
-                        }
-                        else {
-                            // if min hasn't been selected, set it to min value.
-                            String val = (String)minSpinner.getSelectedItem();
-                            if (val.equals(minHint))
-                                minSpinner.setSelection(0);
                         }
                         // call any onSelect listeners.
                         parent.post(performSelect);
