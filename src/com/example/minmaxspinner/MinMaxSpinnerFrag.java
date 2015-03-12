@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,8 +14,7 @@ import com.example.minmaxspinner.MinMaxSpinner.OnMinMaxSpinnerListener;
 
 public class MinMaxSpinnerFrag extends Fragment implements OnMinMaxSpinnerListener{
 	private static final String logTag = "MinMaxFragment";
-	private MinMaxSpinner minMaxSpinner;
-	private List<String> list;
+	private static List<String> list;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -27,14 +25,19 @@ public class MinMaxSpinnerFrag extends Fragment implements OnMinMaxSpinnerListen
 		super.onCreate(savedInstanceState);
 	}
 
+	private static MinMaxSpinner minMaxSpinner;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		Log.i(logTag, "onCreateView");
-		View minMaxFrag = inflater.inflate(R.layout.spinner_layout, container, false);
-		minMaxSpinner = new MinMaxSpinner(minMaxFrag
-			, R.id.min_strokecount, R.id.max_strokecount
-			, list);
+		View minMaxFrag = inflater.inflate(R.layout.minmax_spinner_frag, container, false);
+		View minmaxView = minMaxFrag.findViewById(R.id.fragment_minmax);
+		if (null == minMaxSpinner) {
+			minMaxSpinner = new MinMaxSpinner(minmaxView
+				, R.id.min_strokecount, R.id.max_strokecount
+				, list);
+		}
+		minMaxSpinner.update(minmaxView);
 		minMaxSpinner.setOnSelectListener(this);
 		return minMaxFrag;
 	}

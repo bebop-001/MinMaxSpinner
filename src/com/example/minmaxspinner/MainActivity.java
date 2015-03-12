@@ -22,13 +22,17 @@ public class MainActivity extends Activity implements OnMinMaxSpinnerListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		View minMaxLayout = findViewById(R.id.min_max_layout);
+		View minMaxLayout = findViewById(R.id.activity_minmax);
 		strokecountList = new ArrayList<String>();
 		for(int i = 1; i < MAX_STROKECOUNT; i++) {
 			strokecountList.add(String.valueOf(i));
 		}
-		minMaxSpinner = new MinMaxSpinner(minMaxLayout
-			, R.id.min_strokecount, R.id.max_strokecount, strokecountList);
+		if (null == minMaxSpinner) {
+			minMaxSpinner = new MinMaxSpinner(minMaxLayout
+				, R.id.min_strokecount, R.id.max_strokecount, strokecountList);
+		}
+		minMaxSpinner.update(minMaxLayout);
+		Log.i(logTag, "reset listener");
 		minMaxSpinner.setOnSelectListener(this);
 
 		Fragment minMaxFrag = new MinMaxSpinnerFrag();

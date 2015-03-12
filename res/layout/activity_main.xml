@@ -2,23 +2,29 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
+	android:gravity="top"
 	tools:context="${relativePackage}.${activityClass}" >
 
-    <LinearLayout
+    <FrameLayout
     	android:id="@+id/min_max_layout"
-    	android:layout_width="match_parent"
+    	android:layout_width="wrap_content"
     	android:layout_height="wrap_content"
-    	android:layout_alignParentRight="true"
-    	android:layout_alignParentTop="true"
-    	android:orientation="horizontal" >
-		<include layout="@layout/spinner_layout" />
-    </LinearLayout>
+    	android:layout_alignParentLeft="true"
+    	android:layout_alignParentRight="false"
+    	android:layout_alignParentTop="true" >
+
+		<include 
+            android:id="@+id/activity_minmax"
+            layout="@layout/spinner_layout" />
+    </FrameLayout>
 
     <FrameLayout
     	android:id="@+id/frag_placeholder"
-    	android:layout_below="@+id/min_max_layout"
-    	android:layout_width="match_parent"
-    	android:layout_height="match_parent" >
+    	android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:layout_alignParentTop="true"
+    	android:layout_toRightOf="@id/min_max_layout" >
+
   	</FrameLayout>
 
 </RelativeLayout>
