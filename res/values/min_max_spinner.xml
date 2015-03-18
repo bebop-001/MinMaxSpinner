@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="spinner_strokecount">Select Stroke Count:</string>
+    <string name="minmax_title">MinMaxSpinner:</string>
+    <string name="min_hint">Min</string>
+    <string name="max_hint">Max</string>
 </resources>
