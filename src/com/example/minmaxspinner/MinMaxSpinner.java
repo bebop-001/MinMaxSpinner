@@ -6,6 +6,7 @@ import java.util.List;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -58,9 +59,6 @@ public class MinMaxSpinner extends Spinner {
         maxAdapter.currentIndex = inList.size() - 1;
     }
     public void update(View contentView) {
-        Log.i(logTag, "update "
-                + "min current=" + minAdapter.currentIndex
-                + ", max current = " + maxAdapter.currentIndex);
         minAdapter.setDropDownViewResource(
             android.R.layout.simple_spinner_dropdown_item);
         maxAdapter.setDropDownViewResource(
@@ -81,28 +79,30 @@ public class MinMaxSpinner extends Spinner {
     private class MinMaxAdapter extends ArrayAdapter<String> {
         private int currentIndex = -1;
         private List<String> list;
+        private boolean visited;
         private MinMaxAdapter(Context context,
                 int resId, List<String> list) {
             super(context, resId, list);
             this.list = list;
-            Log.i(logTag, "new instance:spinnerId=" + spinnerId);
         }
         @Override
         public int getCount() {
             int count = super.getCount();
-            Log.i(logTag, "getCount:" + count
-                + ", size=" + list.size() + ", spinnerId=" + spinnerId);
             return count;
         }
         @Override
         public String getItem(int position) {
             currentIndex = position;
-            Log.i(logTag, "getItem:" + position + ":"
-                + currentIndex + "==>" + position
-                + ":" + currentIndex);
             currentIndex = position;
             return super.getItem(position);
         }
+		@Override
+		public View getDropDownView(int position, View convertView,
+				ViewGroup parent) {
+			visited = true;
+			return super.getDropDownView(position, convertView, parent);
+		}
+		private boolean visited() { return visited; }
     }
     public String getMin() {
         String rv = (String)minSpinner.getSelectedItem();
@@ -119,7 +119,7 @@ public class MinMaxSpinner extends Spinner {
                     int position, long id) {
                 int spinnerId = parent.getId();
                 if (spinnerId == minResId || spinnerId == maxResId) {
-                    if (spinnerId == minResId) {
+                    if (spinnerId == minResId && minAdapter.visited()) {
                         // If user sets min value, catch the current max
                         // value, truncate the max values to be valid for
                         // the new min, then try to set the max value back
@@ -142,9 +142,11 @@ public class MinMaxSpinner extends Spinner {
                         else
                         	maxSpinner.setSelection(
                         			maxAdapter.getPosition(currentMin));
+                        parent.post(performSelect);
                     }
-                    // call any onSelect listeners.
-                    parent.post(performSelect);
+                    else if (maxAdapter.visited()) {
+                        parent.post(performSelect);
+                    }
                 }
             }
             @Override
