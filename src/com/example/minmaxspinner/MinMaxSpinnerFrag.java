@@ -35,7 +35,8 @@ public class MinMaxSpinnerFrag extends Fragment implements OnMinMaxSpinnerListen
 		if (null == minMaxSpinner) {
 			minMaxSpinner = new MinMaxSpinner(minmaxView
 				, R.id.min_strokecount, R.id.max_strokecount
-				, list);
+				, list)
+			.setTitle("Fragment min/max spinner: ");
 		}
 		minMaxSpinner.update(minmaxView);
 		minMaxSpinner.setOnSelectListener(this);
@@ -44,8 +45,9 @@ public class MinMaxSpinnerFrag extends Fragment implements OnMinMaxSpinnerListen
 
 	@Override
 	public void onMinMaxSelect(int id) {
-		Log.i(logTag, "onMinMaxSelect: min = " + minMaxSpinner.getMin()
-				+ ", max = " + minMaxSpinner.getMax());
+		ArrayList<String> minMax = minMaxSpinner.getMinMax();
+		Log.i(logTag, "onMinMaxSelect: min = " + minMax.get(0)
+				+ ", max = " + minMax.get(1));
 	}
 
 }

@@ -29,7 +29,9 @@ public class MainActivity extends Activity implements OnMinMaxSpinnerListener {
 		}
 		if (null == minMaxSpinner) {
 			minMaxSpinner = new MinMaxSpinner(minMaxLayout
-				, R.id.min_strokecount, R.id.max_strokecount, strokecountList);
+					, R.id.min_strokecount, R.id.max_strokecount
+					, strokecountList)
+			.setTitle("Activity min/max spinner: ");
 		}
 		minMaxSpinner.update(minMaxLayout);
 		Log.i(logTag, "reset listener");
@@ -45,7 +47,8 @@ public class MainActivity extends Activity implements OnMinMaxSpinnerListener {
 
 	@Override
 	public void onMinMaxSelect(int id) {
-		Log.i(logTag, "onMinMaxSelect: min = " + minMaxSpinner.getMin()
-				+ ", max = " + minMaxSpinner.getMax());
+		ArrayList<String> minMax = minMaxSpinner.getMinMax();
+		Log.i(logTag, "activity onMinMaxSelect: min = " + minMax.get(0)
+				+ ", max = " + minMax.get(1));
 	}
 }
