@@ -24,3 +24,12 @@ fragment than activity and calls the onListen in one case...
 Anyway, I set min ti the min value and max to the max value
 and am calling it good.
 
+Wed Mar 18 08:47:59 PDT 2015
+Put hint stuff back in.  I figured out how to keep spinner
+from changing values during orientation change.
+
+Changed callback interface so value returned is a string
+array list.
+
+Added a 'setTitle' method to the interface.
+
