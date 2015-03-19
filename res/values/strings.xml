@@ -3,5 +3,9 @@
 
 	<string name="app_name">SpinnerExample</string>
 	<string name="hello_world">Hello world!</string>
+	
+	<string name="select_theme">Select display theme</string>
+	<string name="select_light_theme">Select light theme</string>
+	<string name="select_dark_theme">Select dark theme</string>
 
 </resources>
