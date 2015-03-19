@@ -41,7 +41,6 @@ public class MinMaxSpinner extends Spinner {
     private int minResId, maxResId;
     private ArrayList<String> inList;
     private View contentView;
-    private String title;
 
     public MinMaxSpinner(View contentView
             , int minResId, int maxResId, List<String> list) {
@@ -65,13 +64,7 @@ public class MinMaxSpinner extends Spinner {
             , new ArrayList<String>(inList)
             , getResources().getString(R.string.max_hint));
         maxAdapter.currentIndex = inList.size();
-    }
-    public void update(View contentView) {
-        this.contentView = contentView;
-        // This is used during restore from orientation change.
-        if (null != title)
-            ((TextView)contentView.findViewById(R.id.minmax_title))
-                .setText(title);
+        
         minAdapter.setDropDownViewResource(
             android.R.layout.simple_spinner_dropdown_item);
         maxAdapter.setDropDownViewResource(
@@ -96,14 +89,12 @@ public class MinMaxSpinner extends Spinner {
         minSpinner.setSelection(minAdapter.currentIndex);
     }
     public MinMaxSpinner setTitle(String title) {
-        this.title = title;
         TextView tv = (TextView)contentView.findViewById(R.id.minmax_title);
         tv.setText(title);
         return this;
     }
     private class MinMaxAdapter extends ArrayAdapter<String> {
         private int currentIndex = -1;
-        private List<String> list;
         // viewed is primarily a semaphore to eliminate calls
         // to the user callback until the user has at least 
         // used the drop-down menu.  It's false until the
@@ -152,6 +143,19 @@ public class MinMaxSpinner extends Spinner {
         rv.add(0, min);
         rv.add(1, max);
         return rv;
+    }
+    public int[] getMinMaxPositions() {
+    	int [] rv = new int[2];
+    	rv[0] = minSpinner.getSelectedItemPosition();
+    	rv[1] = maxSpinner.getSelectedItemPosition();
+    	return rv;
+    }
+    public MinMaxSpinner setMinMaxPositions(int[] values) {
+    	if (null != values) {
+	    	minSpinner.setSelection(values[0]);
+	    	maxSpinner.setSelection(values[1]);
+    	}
+    	return this;
     }
     // internal spinner listener.  If spinner changes, make sure min and
     // max values are correct and call the user's callback.

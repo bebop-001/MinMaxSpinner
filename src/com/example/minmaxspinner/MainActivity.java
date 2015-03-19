@@ -26,9 +26,10 @@ public class MainActivity extends Activity implements OnMinMaxSpinnerListener {
 	private static final int MAX_STROKECOUNT = 24;
 	private static MinMaxSpinner minMaxSpinner;
     private static SharedPreferences prefs;
+    private static int[] minMaxSelectedSaved;
 	
 	public static class ThemeInfo {
-		private String name; private int themeId, menuItemId;
+		private String name; private int themeId;
 		private ThemeInfo (String name, int themeId) {
 			this.name = name; this.themeId = themeId;
 		}
@@ -58,15 +59,13 @@ public class MainActivity extends Activity implements OnMinMaxSpinnerListener {
 		for(int i = 1; i < MAX_STROKECOUNT; i++) {
 			strokecountList.add(String.valueOf(i));
 		}
-		if (null == minMaxSpinner) {
-			minMaxSpinner = new MinMaxSpinner(minMaxLayout
-					, R.id.min_strokecount, R.id.max_strokecount
-					, strokecountList)
-			.setTitle("Activity min/max spinner: ");
-		}
-		minMaxSpinner.update(minMaxLayout);
-		Log.i(logTag, "reset listener");
-		minMaxSpinner.setOnSelectListener(this);
+
+		minMaxSpinner = new MinMaxSpinner(minMaxLayout
+				, R.id.min_strokecount, R.id.max_strokecount
+				, strokecountList)
+		.setTitle("Activity min/max spinner: ")
+		.setOnSelectListener(this)
+		.setMinMaxPositions(minMaxSelectedSaved);
 
 		Fragment minMaxFrag = new MinMaxSpinnerFrag();
 		FragmentTransaction transaction = getFragmentManager()
@@ -74,6 +73,17 @@ public class MainActivity extends Activity implements OnMinMaxSpinnerListener {
 		transaction.replace(R.id.frag_placeholder, minMaxFrag)
 			.commit();
 
+	}
+	@Override
+	protected void onPause() {
+    	minMaxSelectedSaved = minMaxSpinner.getMinMaxPositions();
+		super.onPause();
+	}
+	@Override
+	protected void onSaveInstanceState(Bundle savedInstanceState) {
+		int[] minMaxSelected = minMaxSpinner.getMinMaxPositions();
+		savedInstanceState.putIntArray("minMaxSelections", minMaxSelected);
+		super.onSaveInstanceState(savedInstanceState);
 	}
 
 	@Override

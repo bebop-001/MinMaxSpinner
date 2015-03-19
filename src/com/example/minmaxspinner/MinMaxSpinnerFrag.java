@@ -24,22 +24,26 @@ public class MinMaxSpinnerFrag extends Fragment implements OnMinMaxSpinnerListen
 			list.add("" + i);
 		super.onCreate(savedInstanceState);
 	}
+	@Override
+	public void onPause() {
+    	minMaxSelectedSaved = minMaxSpinner.getMinMaxPositions();
+		super.onPause();
+	}
 
 	private static MinMaxSpinner minMaxSpinner;
+	private static int[] minMaxSelectedSaved;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		Log.i(logTag, "onCreateView");
 		View minMaxFrag = inflater.inflate(R.layout.minmax_spinner_frag, container, false);
 		View minmaxView = minMaxFrag.findViewById(R.id.fragment_minmax);
-		if (null == minMaxSpinner) {
-			minMaxSpinner = new MinMaxSpinner(minmaxView
-				, R.id.min_strokecount, R.id.max_strokecount
-				, list)
-			.setTitle("Fragment min/max spinner: ");
-		}
-		minMaxSpinner.update(minmaxView);
-		minMaxSpinner.setOnSelectListener(this);
+		minMaxSpinner = new MinMaxSpinner(minmaxView
+			, R.id.min_strokecount, R.id.max_strokecount
+			, list)
+		.setTitle("Fragment min/max spinner: ")
+		.setOnSelectListener(this)
+		.setMinMaxPositions(minMaxSelectedSaved);
 		return minMaxFrag;
 	}
 
