@@ -33,3 +33,6 @@ array list.
 
 Added a 'setTitle' method to the interface.
 
+Thu Mar 19 15:28:26 PDT 2015
+Added an icon for theme selection along with necessary
+code changes we can so now select dark/light themes.
