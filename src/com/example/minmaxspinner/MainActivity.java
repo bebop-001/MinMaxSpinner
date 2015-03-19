@@ -17,6 +17,20 @@ public class MainActivity extends Activity implements OnMinMaxSpinnerListener {
 	private static List<String> strokecountList;
 	private static final int MAX_STROKECOUNT = 24;
 	private static MinMaxSpinner minMaxSpinner;
+	
+	public class ThemeInfo {
+		private String name; private int resId;
+		private ThemeInfo (String name, int resId) {
+			this.name = name; this.resId = resId;
+		}
+		public String toString() {return name; }
+	}
+	public final ArrayList<ThemeInfo> themeList = new ArrayList<ThemeInfo>(2) {
+		{
+			add(new ThemeInfo("Holo Dark", android.R.style.Theme_Holo));
+			add(new ThemeInfo("Holo Light", android.R.style.Theme_Holo_Light));
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
