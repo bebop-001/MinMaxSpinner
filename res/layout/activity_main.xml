@@ -15,7 +15,7 @@
 
 		<include
 			android:id="@+id/activity_minmax"
-			layout="@layout/spinner_layout" />
+			layout="@layout/minmax_layout" />
 
     </FrameLayout>
 
