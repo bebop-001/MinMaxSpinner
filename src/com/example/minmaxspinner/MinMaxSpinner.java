@@ -93,6 +93,9 @@ public class MinMaxSpinner extends Spinner {
         tv.setText(title);
         return this;
     }
+    public MinMaxSpinner setTitle(int titleResId) {
+    	return setTitle(getResources().getString(titleResId));
+    }
     private class MinMaxAdapter extends ArrayAdapter<String> {
         private int currentIndex = -1;
         // viewed is primarily a semaphore to eliminate calls
