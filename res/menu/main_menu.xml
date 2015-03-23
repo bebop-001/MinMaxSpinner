@@ -1,23 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 	<item
-		android:id="@+id/theme_menu"
+		android:id="@+id/select_theme"
 		android:title="@string/select_theme"
 		android:icon="@drawable/dark_light_icon"
 		android:showAsAction="always"
 		>
-		<menu>
-			<group android:checkableBehavior="single"
-				>
-				<item 
-					android:id="@+id/dark_theme"
-					android:title="@string/select_dark_theme"
-					/>
-				<item
-					android:id="@+id/light_theme"
-					android:title="@string/select_light_theme"
-					/>
-			</group>
-		</menu>
 	</item>
 </menu>

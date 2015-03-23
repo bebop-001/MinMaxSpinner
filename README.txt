@@ -36,3 +36,8 @@ Added a 'setTitle' method to the interface.
 Thu Mar 19 15:28:26 PDT 2015
 Added an icon for theme selection along with necessary
 code changes we can so now select dark/light themes.
+
+
+Sun Mar 22 21:53:44 PDT 2015
+pulled out a generic DropDownAdapter that supports hints.
+

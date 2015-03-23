@@ -7,12 +7,10 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -36,23 +34,27 @@ public class MainActivity extends Activity implements OnMinMaxSpinnerListener {
 		public String toString() {return name; }
 	}
 	static int selectedTheme;
-	public static final SparseArray<ThemeInfo> themeList = new SparseArray<ThemeInfo>(2) {
+	public static final ArrayList<ThemeInfo> themeList = new ArrayList<ThemeInfo>(2) {
 		{
-			append(R.id.dark_theme, new ThemeInfo("Holo Dark", android.R.style.Theme_Holo));
-			append(R.id.light_theme, new ThemeInfo("Holo Light", android.R.style.Theme_Holo_Light));
+			add(0, new ThemeInfo("Holo Dark", android.R.style.Theme_Holo));
+			add(1, new ThemeInfo("Holo Light", android.R.style.Theme_Holo_Light));
 		}
 	};
-
+	public void resetButton(View v) {
+		minMaxSpinner.reset();
+	}
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
         /****************** Theme setup ********************************/
     	// Restore user's previous selected theme.
     	prefs = getSharedPreferences("user_prefs.txt", Context.MODE_PRIVATE);
-    	selectedTheme = prefs.getInt("selectedTheme", R.id.dark_theme);
+    	selectedTheme = prefs.getInt("selectedTheme", 0);
+    	if (selectedTheme > themeList.size() - 1) {
+    		selectedTheme = 0;
+    	}
 
         setTheme(themeList.get(selectedTheme).themeId);
-
 		setContentView(R.layout.activity_main);
 		View minMaxLayout = findViewById(R.id.activity_minmax);
 		strokecountList = new ArrayList<String>();
@@ -93,31 +95,24 @@ public class MainActivity extends Activity implements OnMinMaxSpinnerListener {
 				+ ", max = " + minMax.get(1));
 	}
 	
-	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 	    MenuInflater inflater = getMenuInflater();
 	    inflater.inflate(R.menu.main_menu, menu);
-	    menu.findItem(selectedTheme).setChecked(true);
 	    return true;
 	}
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    int itemId = item.getItemId();
-	    boolean rv = true;
-	    ThemeInfo theme = themeList.get(itemId, null);
-	    Log.i(logTag, String.format("onOptionsItemSelected: 0x%08x:", itemId));
-	    if (null != theme) {
-	    	Log.i(logTag, "selected " + theme.name);
-	    	item.setChecked(true);
-        	Log.i(logTag, "onNavigationItemSelected:" + itemId);
+	    boolean rv = false;
+	    if (itemId == R.id.select_theme) {
+		    selectedTheme++;
+		    if (selectedTheme > themeList.size() - 1)
+		    	selectedTheme = 0;
         	Editor e = prefs.edit();
-            e.putInt("selectedTheme", itemId);
+            e.putInt("selectedTheme", selectedTheme);
             e.commit();
-            finish();
-            startActivity(new Intent(this, this.getClass()));
-	    }
-	    else {
-	    	rv = false;
+            recreate();
+            rv = true;
 	    }
 	    if (false == rv)
 	    	rv = super.onOptionsItemSelected(item);
