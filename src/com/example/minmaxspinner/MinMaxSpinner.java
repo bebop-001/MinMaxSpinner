@@ -67,10 +67,6 @@ public class MinMaxSpinner extends Spinner {
         minSpinner.setOnItemSelectedListener(onItemSelectedListener());
         maxSpinner.setOnItemSelectedListener(onItemSelectedListener());
 
-        // Reset the spinner to the current index.  This
-        // is used during startup to init and during
-        // orientation change to restore previous
-        // values.
         reset();
     }
     public void reset() {
