@@ -15,16 +15,10 @@ public class DropDownAdapter<T> extends ArrayAdapter<T> {
     // user has viewed the drop-down menu.
     private boolean viewed;
     private String hint;
-    public DropDownAdapter(Context context,
-            int resId, List<T> list, boolean hasHint) {
+    public DropDownAdapter(Context context, int resId, List<T> list) {
         super(context, resId, 0, new ArrayList<T>(list));
-        if (hasHint)
-        	hint = new String (list.get(list.size() - 1).toString());
         this.setDropDownViewResource(
             android.R.layout.simple_spinner_dropdown_item);
-    }
-    public DropDownAdapter(Context context, int resId, List<T> list) {
-    	this(context, resId, list, false);
     }
     @Override
     public int getCount() {
@@ -46,8 +40,16 @@ public class DropDownAdapter<T> extends ArrayAdapter<T> {
         return super.getDropDownView(position, convertView, parent);
     }
     public boolean viewed() { return viewed; }
-    public String hint() {return hint;}
-    public void reset() {
+    public String getHint() {return hint;}
+    public DropDownAdapter<T> setHint(T hintObj) {
+    	if (null == hint) {
+	    	hint = hintObj.toString();
+	    	super.add(hintObj);
+    	}
+    	return reset();
+    }
+    public DropDownAdapter<T> reset() {
     	viewed = false;
+    	return this;
     }
 }

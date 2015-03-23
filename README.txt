@@ -41,3 +41,7 @@ code changes we can so now select dark/light themes.
 Sun Mar 22 21:53:44 PDT 2015
 pulled out a generic DropDownAdapter that supports hints.
 
+Mon Mar 23 08:27:11 PDT 2015
+Changed signature of DropDownAdapter removing bool hasHint.
+To use object you now create the base object and use 'setHint'
+to add your hint.

@@ -48,19 +48,13 @@ public class MinMaxSpinner extends Spinner {
         this.contentView = contentView;
         spinnerId = idBase++;
 
-        ArrayList<String> minList = new ArrayList<String>(list);
-        minList.add(getResources().getString(R.string.min_hint));
-
         minAdapter = new DropDownAdapter<String>(context
-            , android.R.layout.simple_spinner_item, minList, true);
+            , android.R.layout.simple_spinner_item, list)
+        .setHint(getResources().getString(R.string.min_hint));
 
-        // minAdapter.currentIndex = inList.size();
-
-        ArrayList<String> maxList = new ArrayList<String>(list);
-        maxList.add(getResources().getString(R.string.max_hint));
         maxAdapter = new DropDownAdapter<String>(context
-            , android.R.layout.simple_spinner_item, maxList, true);
-        // maxAdapter.currentIndex = inList.size();
+            , android.R.layout.simple_spinner_item, list)
+        .setHint(getResources().getString(R.string.max_hint));
         
         minSpinner = (Spinner)contentView.findViewById(minResId);
         minSpinner.setAdapter(minAdapter);
@@ -97,10 +91,10 @@ public class MinMaxSpinner extends Spinner {
         // return the min/max value string if we are looking
         // at the hint.
         String min = (String)minSpinner.getSelectedItem();
-        if (min.equals(minAdapter.hint()))
+        if (min.equals(minAdapter.getHint()))
             min = inList.get(0);
         String max = (String)maxSpinner.getSelectedItem();
-        if (max.equals(maxAdapter.hint()))
+        if (max.equals(maxAdapter.getHint()))
             max = inList.get(inList.size() - 1);
 
         ArrayList<String> rv = new ArrayList<String>(2);
@@ -134,7 +128,7 @@ public class MinMaxSpinner extends Spinner {
                         // if max is still displaying its hint, set it to
                         // its max value.
                         String max = (String)maxSpinner.getSelectedItem();
-                        if (max.equals(maxAdapter.hint()))
+                        if (max.equals(maxAdapter.getHint()))
                             maxSpinner.setSelection(maxSpinner.getCount() - 2);
                         // if min is greater than max, set max to min.
                         else if (position > maxSpinner.getSelectedItemPosition())
@@ -146,7 +140,7 @@ public class MinMaxSpinner extends Spinner {
                         // if min is still displaying its hint, set it to its
                         // min value.
                         String min = (String)minSpinner.getSelectedItem();
-                        if (min.equals(minAdapter.hint()))
+                        if (min.equals(minAdapter.getHint()))
                             minSpinner.setSelection(0);
                         // if max is less than min, set min to max.
                         else if (position < minSpinner.getSelectedItemPosition())
