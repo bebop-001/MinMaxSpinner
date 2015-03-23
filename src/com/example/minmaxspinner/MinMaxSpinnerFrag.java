@@ -32,6 +32,9 @@ public class MinMaxSpinnerFrag extends Fragment implements OnMinMaxSpinnerListen
 
 	private static MinMaxSpinner minMaxSpinner;
 	private static int[] minMaxSelectedSaved;
+	public static void reset() {
+		minMaxSpinner.reset();
+	}
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -41,7 +44,7 @@ public class MinMaxSpinnerFrag extends Fragment implements OnMinMaxSpinnerListen
 		minMaxSpinner = new MinMaxSpinner(minmaxView
 			, R.id.min_strokecount, R.id.max_strokecount
 			, list)
-		.setTitle("Fragment min/max spinner: ")
+		.setTitle("Fragment min/max spinner, 1..20: ")
 		.setOnSelectListener(this)
 		.setMinMaxPositions(minMaxSelectedSaved);
 		return minMaxFrag;

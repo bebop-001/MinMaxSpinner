@@ -45,3 +45,8 @@ Mon Mar 23 08:27:11 PDT 2015
 Changed signature of DropDownAdapter removing bool hasHint.
 To use object you now create the base object and use 'setHint'
 to add your hint.
+
+Mon Mar 23 13:59:43 PDT 2015
+Changed back to separate constructors for hint/no hint spinner.
+Added test for no-hint spinner and fixed problem where last
+value wasn't getting returned properly and tested...

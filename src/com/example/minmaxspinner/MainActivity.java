@@ -15,6 +15,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.example.minmaxspinner.MinMaxSpinner.OnMinMaxSpinnerListener;
 
@@ -23,8 +25,17 @@ public class MainActivity extends Activity implements OnMinMaxSpinnerListener {
 	private static List<String> strokecountList;
 	private static final int MAX_STROKECOUNT = 24;
 	private static MinMaxSpinner minMaxSpinner;
+	private static Spinner noHintSpinner;
+	private static DropDownAdapter<String> noHintAdapter;
     private static SharedPreferences prefs;
     private static int[] minMaxSelectedSaved;
+    
+    private List<String> noHintList = new ArrayList<String>() {
+    	{
+    		add("1"); add("2"); add("3"); add("4"); add("5");
+    		add("6"); add("7"); add("8"); add("9"); add("10");
+    	}
+    };
 	
 	public static class ThemeInfo {
 		private String name; private int themeId;
@@ -42,6 +53,8 @@ public class MainActivity extends Activity implements OnMinMaxSpinnerListener {
 	};
 	public void resetButton(View v) {
 		minMaxSpinner.reset();
+		noHintSpinner.setSelection(0);
+		MinMaxSpinnerFrag.reset();
 	}
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,14 +71,21 @@ public class MainActivity extends Activity implements OnMinMaxSpinnerListener {
 		setContentView(R.layout.activity_main);
 		View minMaxLayout = findViewById(R.id.activity_minmax);
 		strokecountList = new ArrayList<String>();
-		for(int i = 1; i < MAX_STROKECOUNT; i++) {
+		for(int i = 1; i <= MAX_STROKECOUNT; i++) {
 			strokecountList.add(String.valueOf(i));
 		}
-
+		
+		noHintSpinner = (Spinner) findViewById(R.id.nohint_spinner);
+		noHintAdapter = new DropDownAdapter<String>(
+			this, android.R.layout.simple_spinner_item, noHintList);
+		noHintSpinner.setAdapter(noHintAdapter);
+		TextView noHintTv = (TextView)findViewById(R.id.nohint_spinner_text);
+		noHintTv.setText("No hint, 1..10:");
+		
 		minMaxSpinner = new MinMaxSpinner(minMaxLayout
 				, R.id.min_strokecount, R.id.max_strokecount
 				, strokecountList)
-		.setTitle("Activity min/max spinner: ")
+		.setTitle("Activity min/max spinner, 1..24: ")
 		.setOnSelectListener(this)
 		.setMinMaxPositions(minMaxSelectedSaved);
 

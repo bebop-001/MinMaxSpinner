@@ -49,12 +49,12 @@ public class MinMaxSpinner extends Spinner {
         spinnerId = idBase++;
 
         minAdapter = new DropDownAdapter<String>(context
-            , android.R.layout.simple_spinner_item, list)
-        .setHint(getResources().getString(R.string.min_hint));
+            , android.R.layout.simple_spinner_item, list
+            , getResources().getString(R.string.min_hint));
 
         maxAdapter = new DropDownAdapter<String>(context
-            , android.R.layout.simple_spinner_item, list)
-        .setHint(getResources().getString(R.string.max_hint));
+            , android.R.layout.simple_spinner_item, list
+            , getResources().getString(R.string.max_hint));
         
         minSpinner = (Spinner)contentView.findViewById(minResId);
         minSpinner.setAdapter(minAdapter);
@@ -125,7 +125,7 @@ public class MinMaxSpinner extends Spinner {
                         // its max value.
                         String max = (String)maxSpinner.getSelectedItem();
                         if (max.equals(maxAdapter.getHint()))
-                            maxSpinner.setSelection(maxSpinner.getCount() - 2);
+                            maxSpinner.setSelection(maxSpinner.getCount() - 1);
                         // if min is greater than max, set max to min.
                         else if (position > maxSpinner.getSelectedItemPosition())
                             maxSpinner.setSelection(position);
